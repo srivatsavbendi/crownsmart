@@ -1,0 +1,1191 @@
+from PyQt5 import QtCore, QtGui, QtWidgets
+import time
+from datetime import datetime
+import sys
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel
+from PyQt5.QtGui import QFont
+from PyQt5.QtCore import QTimer, QTime, Qt
+from PyQt5.QtCore import QDate, QTime, QDateTime, Qt
+import requests
+import tweepy
+import json
+import math
+import threading
+import random
+
+
+class Ui_MainWindow(object):
+    from firebase import firebase
+    firebaseMode = firebase.FirebaseApplication("https://smartmirror1-b8e5a.firebaseio.com/", None)
+    firebaseInfo = firebase.FirebaseApplication("https://information-8b6ca.firebaseio.com/")
+
+    mode = firebaseMode.get("/Mirror1/Mode", "")
+    print(mode)
+    # mode = "default"
+    paintingName = firebaseMode.get("/Mirror1/paintingName", "")
+    print(paintingName)
+    
+
+    if mode == "default":
+        widget4Subject = "News"
+        widget6Subject = "Forecast"
+        widget7Subject = "Holidays"
+        widget9Subject = "Twitter"
+    if mode == "custom1":
+        widget4Subject = "News"
+        widget6Subject = "Holidays"
+        widget7Subject = "Forecast"
+        widget9Subject = "Twitter"
+    if mode == "custom2":
+        widget4Subject = "News"
+        widget6Subject = "Holidays"
+        widget7Subject = "Twitter"
+        widget9Subject = "Forecast"
+    if mode == "custom3":
+        widget4Subject = "Twitter"
+        widget6Subject = "Holidays"
+        widget7Subject = "News"
+        widget9Subject = "Forecast"
+
+    if mode == "Painting":
+        def __init__(self):
+            MainWindow.setObjectName("centralWidget")
+            MainWindow.resize(1600, 850)
+            self.centralWidget = QtWidgets.QWidget(MainWindow)
+            self.paintingLabel = QtWidgets.QLabel(self.centralWidget)
+
+        def setupUi(self, centralWidget):
+            self.centralWidget.setObjectName("centralWidget")
+            self.centralWidget.resize(1600, 850)
+            self.centralWidget.setStyleSheet("color: white")
+
+            if self.paintingName == "Guernica":
+                self.paintingLabel.setGeometry(QtCore.QRect(0, 0, 1600, 850))
+                self.paintingLabel.setObjectName("paintingLabel")
+                self.paintingLabel.setStyleSheet("color: white")
+
+            if self.paintingName == "StarryNight":
+                self.paintingLabel.setGeometry(QtCore.QRect(0, 0, 1600, 850))
+                self.paintingLabel.setObjectName("paintingLabel")
+                self.paintingLabel.setStyleSheet("color: white")
+
+            if self.paintingName == "TheLastSupper":
+                self.paintingLabel.setGeometry(QtCore.QRect(0, 0, 1600, 850))
+                self.paintingLabel.setObjectName("paintingLabel")
+                self.paintingLabel.setStyleSheet("color: white")
+
+            if self.paintingName == "TheBirthOfVenus":
+                self.paintingLabel.setGeometry(QtCore.QRect(0, 0, 1600, 850))
+                self.paintingLabel.setObjectName("paintingLabel")
+                self.paintingLabel.setStyleSheet("color: white")
+
+            if self.paintingName == "ThePersistenceOfMemory":
+                self.paintingLabel.setGeometry(QtCore.QRect(0, 0, 1600, 850))
+                self.paintingLabel.setObjectName("paintingLabel")
+                self.paintingLabel.setStyleSheet("color: white")
+
+            self.retranslateUi(self.centralWidget)
+            QtCore.QMetaObject.connectSlotsByName(self.centralWidget)
+
+        def retranslateUi(self, centralWidget):
+            _translate = QtCore.QCoreApplication.translate
+            self.centralWidget.setWindowTitle(_translate("centralWidget", "MainWindow"))
+
+            if self.paintingName == "Guernica":
+                self.paintingLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/Paintings/Guernica"))
+                self.paintingLabel.setScaledContents(True)
+                self.paintingLabel.setEnabled(True)
+
+            if self.paintingName == "StarryNight":
+                self.paintingLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/Paintings/StarryNight"))
+                self.paintingLabel.setScaledContents(True)
+                self.paintingLabel.setEnabled(True)
+
+            if self.paintingName == "TheLastSupper":
+                self.paintingLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/Paintings/TheLastSupper"))
+                self.paintingLabel.setScaledContents(True)
+                self.paintingLabel.setEnabled(True)
+
+            if self.paintingName == "TheBirthOfVenus":
+                self.paintingLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/Paintings/TheBirthOfVenus"))
+                self.paintingLabel.setScaledContents(True)
+                self.paintingLabel.setEnabled(True)
+
+            if self.paintingName == "ThePersistenceOfMemory":
+                self.paintingLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/Paintings/ThePersistenceOfMemory"))
+                self.paintingLabel.setScaledContents(True)
+                self.paintingLabel.setEnabled(True)
+
+    if mode == "Slideshow":
+        def __init__(self):
+            MainWindow.setObjectName("MainWindow")
+            MainWindow.resize(1600, 850)
+            self.centralWidget = QtWidgets.QWidget(MainWindow)
+            self.paintingLabel = QtWidgets.QLabel(self.centralWidget)
+            self.timeLabel = QtWidgets.QLabel(self.centralWidget)
+            self.secLabel = QtWidgets.QLabel(self.centralWidget)
+
+            self.timer5 = QTimer()
+            self.timer5.timeout.connect(self.Gallery)
+            self.timer5.start(55000)  # update every 55 seconds
+            self.Gallery()
+
+            self.timer9 = QTimer()
+            self.timer9.timeout.connect(self.Time)
+            self.timer9.start(1000)  # seconds
+            self.Time()
+
+        def setupUi(self, MainWindow):
+            self.centralWidget.setObjectName("centralWidget")
+            self.centralWidget.resize(1600, 850)
+            # self.centralWidget.setStyleSheet("color: white;  background-color: black")
+            self.centralWidget.setStyleSheet("color: white")
+
+            self.paintingLabel.setGeometry(QtCore.QRect(0, 0, 1600, 850))
+            self.paintingLabel.setObjectName("paintingLabel")
+            # self.paintingLabel.setStyleSheet("color: white;  background-color: black")
+            self.paintingLabel.setStyleSheet("color: white")
+
+            self.timeLabel.setGeometry(QtCore.QRect(1000, 650, 400, 100))
+            font = QtGui.QFont()
+            font.setFamily("Avenir Next")
+            font.setPointSize(50)
+            self.timeLabel.setFont(font)
+            self.timeLabel.setObjectName("timeLabel")
+            self.timeLabel.setStyleSheet("color: white")
+
+            self.secLabel.setGeometry(QtCore.QRect(1190, 630, 400, 100))
+            font = QtGui.QFont()
+            font.setFamily("Avenir Next")
+            font.setPointSize(25)
+            self.secLabel.setFont(font)
+            self.secLabel.setObjectName("secLabel")
+            self.secLabel.setStyleSheet("color: white")
+
+            self.retranslateUi(self.centralWidget)
+            QtCore.QMetaObject.connectSlotsByName(self.centralWidget)
+
+        def retranslateUi(self, MainWindow):
+            _translate = QtCore.QCoreApplication.translate
+            self.centralWidget.setWindowTitle(_translate("centralWidget", "Gallery"))
+
+        def Gallery(self):
+            self.yex = random.randrange(0, 23)
+
+            _translate = QtCore.QCoreApplication.translate
+            paintingNumber = str(self.yex)
+
+            self.paintingLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/Slideshow/" + paintingNumber + ".jpg"))
+            # self.paintingLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop//home/pi/Desktop/Assets/Paintings/three"))
+            self.paintingLabel.setScaledContents(True)
+            self.paintingLabel.setEnabled(True)
+
+        def Time(self):
+            _translate = QtCore.QCoreApplication.translate
+            currentTime = QTime.currentTime()
+            currentDate = QDate.currentDate()
+            time1 = currentTime.toString('hh:mm  ap')
+            sec1 = currentTime.toString('ss')
+
+            self.timeLabel.setText(_translate("MainWindow", time1))
+            self.secLabel.setText(_translate("MainWindow", sec1))
+
+    if mode == "default" or mode == "custom1" or mode == "custom2" or mode == "custom3":
+
+        def __init__(self):
+            MainWindow.setObjectName("MainWindow")
+            MainWindow.resize(1600, 850)
+            self.centralwidget = QtWidgets.QWidget(MainWindow)
+            self.centralwidget.setObjectName("centralwidget")
+
+            if self.mode == "default" or self.mode == "custom1" or self.mode == "custom2" or self.mode == "custom3":
+                self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
+                self.gridLayoutWidget.setGeometry(QtCore.QRect(0, 0, 1600, 850))
+                self.gridLayoutWidget.setObjectName("gridLayoutWidget")
+
+                self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
+                self.gridLayout.setContentsMargins(0, 0, 0, 0)
+                self.gridLayout.setObjectName("gridLayout")
+
+                self.widget = QtWidgets.QWidget(self.gridLayoutWidget)
+                self.widget.setObjectName("widget")
+
+                self.widget1 = QtWidgets.QWidget(self.widget)
+                self.widget1.setGeometry(QtCore.QRect(0, 0, 533, 283))
+                self.widget1.setObjectName("widget1")
+                self.widget1.setStyleSheet("color: white;  background-color: black")
+
+                self.widget2 = QtWidgets.QWidget(self.widget)
+                self.widget2.setGeometry(QtCore.QRect(533, 0, 533, 283))
+                self.widget2.setObjectName("widget2")
+                self.widget2.setStyleSheet("color: white;  background-color: black")
+
+                self.widget3 = QtWidgets.QWidget(self.widget)
+                self.widget3.setGeometry(QtCore.QRect(1066, 0, 533, 283))
+                self.widget3.setObjectName("widget3")
+                self.widget3.setStyleSheet("color: white;  background-color: black")
+
+                self.widget4 = QtWidgets.QWidget(self.widget)
+                self.widget4.setGeometry(QtCore.QRect(0, 283, 800, 283))
+                self.widget4.setObjectName("widget4")
+                self.widget4.setStyleSheet("color: white;  background-color: black")
+
+                self.widget5 = QtWidgets.QWidget(self.widget)
+                self.widget5.setGeometry(QtCore.QRect(800, 283, 266, 283))
+                self.widget5.setObjectName("widget5")
+                self.widget5.setStyleSheet("color: white;  background-color: black")
+
+                self.widget6 = QtWidgets.QWidget(self.widget)
+                self.widget6.setGeometry(QtCore.QRect(1066, 283, 534, 283))
+                self.widget6.setObjectName("widget6")
+                self.widget6.setStyleSheet("color: white;  background-color: black")
+
+                self.widget7 = QtWidgets.QWidget(self.widget)
+                self.widget7.setGeometry(QtCore.QRect(0, 566, 800, 284))
+                self.widget7.setObjectName("widget7")
+                self.widget7.setStyleSheet("color: white;  background-color: black")
+
+                self.widget8 = QtWidgets.QWidget(self.widget)
+                self.widget8.setGeometry(QtCore.QRect(800, 566, 266, 284))
+                self.widget8.setObjectName("widget8")
+                self.widget8.setStyleSheet("color: white;  background-color: black")
+
+                self.widget9 = QtWidgets.QWidget(self.widget)
+                self.widget9.setGeometry(QtCore.QRect(1066, 566, 534, 284))
+                self.widget9.setObjectName("widget9")
+                self.widget9.setStyleSheet("color: white;  background-color: black")
+
+                self.widgetMain = QtWidgets.QWidget(self.widget)
+                self.widgetMain.setGeometry(QtCore.QRect(0, 0, 1370, 45))
+                self.widgetMain.setObjectName("widgetMain")
+                self.widgetMain.setStyleSheet("color: white;  background-color: black")
+
+                self.gridLayout.addWidget(self.widget, 0, 0, 1, 1)
+                MainWindow.setCentralWidget(self.centralwidget)
+
+                self.crownLabel = QtWidgets.QLabel(self.widgetMain)
+
+                self.dateLabel = QtWidgets.QLabel(self.widget1)
+                self.timeLabel = QtWidgets.QLabel(self.widget1)
+                self.secLabel = QtWidgets.QLabel(self.widget1)
+                self.rectangleLabel = QtWidgets.QLabel(self.widget1)
+
+                self.tempLabel = QtWidgets.QLabel(self.widget3)
+                self.deg1Label = QtWidgets.QLabel(self.widget3)
+                self.desLabel = QtWidgets.QLabel(self.widget3)
+                self.deg2Label = QtWidgets.QLabel(self.widget3)
+                self.weatherLabel = QtWidgets.QLabel(self.widget3)
+                self.sunLabel = QtWidgets.QLabel(self.widget3)
+                self.deg3Label = QtWidgets.QLabel(self.widget3)
+                self.deg4Label = QtWidgets.QLabel(self.widget3)
+
+                self.forecastLabel = QtWidgets.QLabel(self.widget6)
+                self.icon1Label = QtWidgets.QLabel(self.widget6)
+                self.icon2Label = QtWidgets.QLabel(self.widget6)
+                self.icon3Label = QtWidgets.QLabel(self.widget6)
+                self.icon4Label = QtWidgets.QLabel(self.widget6)
+                self.icon5Label = QtWidgets.QLabel(self.widget6)
+
+                self.day1Label = QtWidgets.QLabel(self.widget6)
+                self.day2Label = QtWidgets.QLabel(self.widget6)
+                self.day3Label = QtWidgets.QLabel(self.widget6)
+                self.day4Label = QtWidgets.QLabel(self.widget6)
+                self.day5Label = QtWidgets.QLabel(self.widget6)
+
+                self.newsTLabel = QtWidgets.QLabel(self.widget4)
+                self.news1Label = QtWidgets.QLabel(self.widget4)
+                self.news2Label = QtWidgets.QLabel(self.widget4)
+                self.news3Label = QtWidgets.QLabel(self.widget4)
+                self.news4Label = QtWidgets.QLabel(self.widget4)
+                self.news5Label = QtWidgets.QLabel(self.widget4)
+
+                self.twitterLabel = QtWidgets.QLabel(self.widget9)
+                self.trend1Label = QtWidgets.QLabel(self.widget9)
+                self.trend2Label = QtWidgets.QLabel(self.widget9)
+                self.trend3Label = QtWidgets.QLabel(self.widget9)
+                self.trend4Label = QtWidgets.QLabel(self.widget9)
+                self.trend5Label = QtWidgets.QLabel(self.widget9)
+
+                self.holidayTLabel = QtWidgets.QLabel(self.widget7)
+                self.holiday1Label = QtWidgets.QLabel(self.widget7)
+                self.holiday2Label = QtWidgets.QLabel(self.widget7)
+                self.holiday3Label = QtWidgets.QLabel(self.widget7)
+                self.holiday4Label = QtWidgets.QLabel(self.widget7)
+                self.holiday5Label = QtWidgets.QLabel(self.widget7)
+
+                if self.widget4Subject == "Forecast":
+                    self.forecastLabel = QtWidgets.QLabel(self.widget4)
+                    self.icon1Label = QtWidgets.QLabel(self.widget4)
+                    self.icon2Label = QtWidgets.QLabel(self.widget4)
+                    self.icon3Label = QtWidgets.QLabel(self.widget4)
+                    self.icon4Label = QtWidgets.QLabel(self.widget4)
+                    self.icon5Label = QtWidgets.QLabel(self.widget4)
+                    self.day1Label = QtWidgets.QLabel(self.widget4)
+                    self.day2Label = QtWidgets.QLabel(self.widget4)
+                    self.day3Label = QtWidgets.QLabel(self.widget4)
+                    self.day4Label = QtWidgets.QLabel(self.widget4)
+                    self.day5Label = QtWidgets.QLabel(self.widget4)
+                if self.widget4Subject == "News":
+                    self.newsTLabel = QtWidgets.QLabel(self.widget4)
+                    self.news1Label = QtWidgets.QLabel(self.widget4)
+                    self.news2Label = QtWidgets.QLabel(self.widget4)
+                    self.news3Label = QtWidgets.QLabel(self.widget4)
+                    self.news4Label = QtWidgets.QLabel(self.widget4)
+                    self.news5Label = QtWidgets.QLabel(self.widget4)
+                if self.widget4Subject == "Holidays":
+                    self.holidayTLabel = QtWidgets.QLabel(self.widget4)
+                    self.holiday1Label = QtWidgets.QLabel(self.widget4)
+                    self.holiday2Label = QtWidgets.QLabel(self.widget4)
+                    self.holiday3Label = QtWidgets.QLabel(self.widget4)
+                    self.holiday4Label = QtWidgets.QLabel(self.widget4)
+                    self.holiday5Label = QtWidgets.QLabel(self.widget4)
+                if self.widget4Subject == "Twitter":
+                    self.twitterLabel = QtWidgets.QLabel(self.widget4)
+                    self.trend1Label = QtWidgets.QLabel(self.widget4)
+                    self.trend2Label = QtWidgets.QLabel(self.widget4)
+                    self.trend3Label = QtWidgets.QLabel(self.widget4)
+                    self.trend4Label = QtWidgets.QLabel(self.widget4)
+                    self.trend5Label = QtWidgets.QLabel(self.widget4)
+
+                if self.widget6Subject == "Forecast":
+                    self.forecastLabel = QtWidgets.QLabel(self.widget6)
+                    self.icon1Label = QtWidgets.QLabel(self.widget6)
+                    self.icon2Label = QtWidgets.QLabel(self.widget6)
+                    self.icon3Label = QtWidgets.QLabel(self.widget6)
+                    self.icon4Label = QtWidgets.QLabel(self.widget6)
+                    self.icon5Label = QtWidgets.QLabel(self.widget6)
+                    self.day1Label = QtWidgets.QLabel(self.widget6)
+                    self.day2Label = QtWidgets.QLabel(self.widget6)
+                    self.day3Label = QtWidgets.QLabel(self.widget6)
+                    self.day4Label = QtWidgets.QLabel(self.widget6)
+                    self.day5Label = QtWidgets.QLabel(self.widget6)
+                if self.widget6Subject == "News":
+                    self.newsTLabel = QtWidgets.QLabel(self.widget6)
+                    self.news1Label = QtWidgets.QLabel(self.widget6)
+                    self.news2Label = QtWidgets.QLabel(self.widget6)
+                    self.news3Label = QtWidgets.QLabel(self.widget6)
+                    self.news4Label = QtWidgets.QLabel(self.widget6)
+                    self.news5Label = QtWidgets.QLabel(self.widget6)
+                if self.widget6Subject == "Holidays":
+                    self.holidayTLabel = QtWidgets.QLabel(self.widget6)
+                    self.holiday1Label = QtWidgets.QLabel(self.widget6)
+                    self.holiday2Label = QtWidgets.QLabel(self.widget6)
+                    self.holiday3Label = QtWidgets.QLabel(self.widget6)
+                    self.holiday4Label = QtWidgets.QLabel(self.widget6)
+                    self.holiday5Label = QtWidgets.QLabel(self.widget6)
+                if self.widget6Subject == "Twitter":
+                    self.twitterLabel = QtWidgets.QLabel(self.widget6)
+                    self.trend1Label = QtWidgets.QLabel(self.widget6)
+                    self.trend2Label = QtWidgets.QLabel(self.widget6)
+                    self.trend3Label = QtWidgets.QLabel(self.widget6)
+                    self.trend4Label = QtWidgets.QLabel(self.widget6)
+                    self.trend5Label = QtWidgets.QLabel(self.widget6)
+
+                if self.widget7Subject == "Forecast":
+                    self.forecastLabel = QtWidgets.QLabel(self.widget7)
+                    self.icon1Label = QtWidgets.QLabel(self.widget7)
+                    self.icon2Label = QtWidgets.QLabel(self.widget7)
+                    self.icon3Label = QtWidgets.QLabel(self.widget7)
+                    self.icon4Label = QtWidgets.QLabel(self.widget7)
+                    self.icon5Label = QtWidgets.QLabel(self.widget7)
+                    self.day1Label = QtWidgets.QLabel(self.widget7)
+                    self.day2Label = QtWidgets.QLabel(self.widget7)
+                    self.day3Label = QtWidgets.QLabel(self.widget7)
+                    self.day4Label = QtWidgets.QLabel(self.widget7)
+                    self.day5Label = QtWidgets.QLabel(self.widget7)
+                if self.widget7Subject == "News":
+                    self.newsTLabel = QtWidgets.QLabel(self.widget7)
+                    self.news1Label = QtWidgets.QLabel(self.widget7)
+                    self.news2Label = QtWidgets.QLabel(self.widget7)
+                    self.news3Label = QtWidgets.QLabel(self.widget7)
+                    self.news4Label = QtWidgets.QLabel(self.widget7)
+                    self.news5Label = QtWidgets.QLabel(self.widget7)
+                if self.widget7Subject == "Holidays":
+                    self.holidayTLabel = QtWidgets.QLabel(self.widget7)
+                    self.holiday1Label = QtWidgets.QLabel(self.widget7)
+                    self.holiday2Label = QtWidgets.QLabel(self.widget7)
+                    self.holiday3Label = QtWidgets.QLabel(self.widget7)
+                    self.holiday4Label = QtWidgets.QLabel(self.widget7)
+                    self.holiday5Label = QtWidgets.QLabel(self.widget7)
+                if self.widget7Subject == "Twitter":
+                    self.twitterLabel = QtWidgets.QLabel(self.widget7)
+                    self.trend1Label = QtWidgets.QLabel(self.widget7)
+                    self.trend2Label = QtWidgets.QLabel(self.widget7)
+                    self.trend3Label = QtWidgets.QLabel(self.widget7)
+                    self.trend4Label = QtWidgets.QLabel(self.widget7)
+                    self.trend5Label = QtWidgets.QLabel(self.widget7)
+
+                if self.widget9Subject == "Forecast":
+                    self.forecastLabel = QtWidgets.QLabel(self.widget9)
+                    self.icon1Label = QtWidgets.QLabel(self.widget9)
+                    self.icon2Label = QtWidgets.QLabel(self.widget9)
+                    self.icon3Label = QtWidgets.QLabel(self.widget9)
+                    self.icon4Label = QtWidgets.QLabel(self.widget9)
+                    self.icon5Label = QtWidgets.QLabel(self.widget9)
+                    self.day1Label = QtWidgets.QLabel(self.widget9)
+                    self.day2Label = QtWidgets.QLabel(self.widget9)
+                    self.day3Label = QtWidgets.QLabel(self.widget9)
+                    self.day4Label = QtWidgets.QLabel(self.widget9)
+                    self.day5Label = QtWidgets.QLabel(self.widget9)
+                if self.widget9Subject == "News":
+                    self.newsTLabel = QtWidgets.QLabel(self.widget9)
+                    self.news1Label = QtWidgets.QLabel(self.widget9)
+                    self.news2Label = QtWidgets.QLabel(self.widget9)
+                    self.news3Label = QtWidgets.QLabel(self.widget9)
+                    self.news4Label = QtWidgets.QLabel(self.widget9)
+                    self.news5Label = QtWidgets.QLabel(self.widget9)
+                if self.widget9Subject == "Holidays":
+                    self.holidayTLabel = QtWidgets.QLabel(self.widget9)
+                    self.holiday1Label = QtWidgets.QLabel(self.widget9)
+                    self.holiday2Label = QtWidgets.QLabel(self.widget9)
+                    self.holiday3Label = QtWidgets.QLabel(self.widget9)
+                    self.holiday4Label = QtWidgets.QLabel(self.widget9)
+                    self.holiday5Label = QtWidgets.QLabel(self.widget9)
+                if self.widget9Subject == "Twitter":
+                    self.twitterLabel = QtWidgets.QLabel(self.widget9)
+                    self.trend1Label = QtWidgets.QLabel(self.widget9)
+                    self.trend2Label = QtWidgets.QLabel(self.widget9)
+                    self.trend3Label = QtWidgets.QLabel(self.widget9)
+                    self.trend4Label = QtWidgets.QLabel(self.widget9)
+                    self.trend5Label = QtWidgets.QLabel(self.widget9)
+
+                self.timer1 = QTimer()
+                self.timer1.timeout.connect(self.showTime)
+                self.timer1.start(1000)  # update every second
+
+                self.timer2 = QTimer()
+                self.timer2.timeout.connect(self.showAPI)
+                self.timer2.start(3600000)  # update every hour
+
+                self.timer3 = QTimer()
+                self.timer3.timeout.connect(self.showTwitter)
+                self.timer3.start(1800000)  # update every hour
+
+                self.showTime()
+                self.showAPI()
+                self.showTwitter()
+
+        def setupUi(self, MainWindow):
+            MainWindow.setObjectName("MainWindow")
+            MainWindow.resize(1600, 850)
+            self.centralwidget.setObjectName("centralwidget")
+            MainWindow.setStyleSheet("color: white;  background-color: black")
+            MainWindow.setAutoFillBackground(True)
+
+            # MainWindow.setCentralWidget(self.centralwidget)
+            # self.statusbar.setObjectName("statusbar")
+            # MainWindow.setStatusBar(self.statusbar)
+            # self.retranslateUi(MainWindow)
+            # QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+            # self.crownLabel.setGeometry(QtCore.QRect(5, 0, 150, 50))
+            # font = QtGui.QFont()
+            # font.setFamily("Fixedsys")
+            # font.setPointSize(42)
+            # self.crownLabel.setFont(font)
+            # self.crownLabel.setObjectName("crownLabel")
+            # self.crownLabel.setStyleSheet("color: white;  background-color: black")
+
+            # ____________TIME AND DATE______________
+            self.rectangleLabel.setGeometry(QtCore.QRect(0, 0, 0, 0))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(60)
+            self.rectangleLabel.setFont(font)
+            self.rectangleLabel.setObjectName("rectangleLabel")
+            self.rectangleLabel.setStyleSheet("color: white;  background-color: black")
+            
+            self.timeLabel.setGeometry(QtCore.QRect(100, 140, 500, 80))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(60)
+            self.timeLabel.setFont(font)
+            self.timeLabel.setObjectName("timeLabel")
+            self.timeLabel.setStyleSheet("color: white;  background-color: black")
+
+            self.secLabel.setGeometry(QtCore.QRect(300, 130, 50, 40))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(30)
+            self.secLabel.setFont(font)
+            self.secLabel.setObjectName("secLabel")
+            self.secLabel.setStyleSheet("color: white;  background-color: black")
+
+            self.dateLabel.setGeometry(QtCore.QRect(50, 80, 500, 40))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(30)
+            self.dateLabel.setFont(font)
+            self.dateLabel.setObjectName("dateLabel")
+            self.dateLabel.setStyleSheet("color: white;  background-color: black")
+
+            # ____________WEATHERRRRRRRRRRRRRRRR______________
+            self.tempLabel.setGeometry(QtCore.QRect(180, 80, 300, 100))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(80)
+            self.tempLabel.setFont(font)
+            self.tempLabel.setObjectName("tempLabel")
+            self.tempLabel.setStyleSheet("color: white;  background-color: black")
+
+            # Degree symbol for maximum
+            # font = QtGui.QFont()
+            # font.setFamily("Arial")
+            # font.setPointSize(20)
+            # self.deg1Label.setFont(font)
+            # self.deg1Label.setObjectName("deg1Label")
+            # self.deg1Label.setGeometry(QtCore.QRect(150, 28, 7, 7))
+            # self.deg1Label.setScaledContents(True)
+            # self.deg1Label.setStyleSheet("color: white;  background-color: black")
+
+            self.desLabel.setGeometry(QtCore.QRect(100, 180, 300, 30))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.desLabel.setFont(font)
+            self.desLabel.setObjectName("desLabel")
+            self.desLabel.setStyleSheet("color: white;  background-color: black")
+            self.desLabel.setAlignment(Qt.AlignCenter)
+
+            # Degree symbol for minimum
+            # font = QtGui.QFont()
+            # font.setFamily("Arial")
+            # font.setPointSize(20)
+            # self.deg2Label.setFont(font)
+            # self.deg2Label.setObjectName("deg2Label")
+            # self.deg2Label.setGeometry(QtCore.QRect(1222, 28, 7, 7))
+            # self.deg2Label.setScaledContents(True)
+            # self.deg2Label.setStyleSheet("color: white;  background-color: black")
+
+            # self.weatherLabel.setGeometry(QtCore.QRect(190, 100, 200, 41))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(50)
+            self.weatherLabel.setFont(font)
+            self.weatherLabel.setObjectName("weatherLabel")
+            self.weatherLabel.setGeometry(QtCore.QRect(80, 80, 80, 80))
+            self.weatherLabel.setScaledContents(True)
+            self.weatherLabel.setStyleSheet("* { background-color: rgba(255, 255, 255, 255); }");
+
+            self.sunLabel.setGeometry(QtCore.QRect(50, 37, 300, 20))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(15)
+            self.sunLabel.setFont(font)
+            self.sunLabel.setObjectName("sunLabel")
+            self.sunLabel.setStyleSheet("color: white;  background-color: black")
+            self.sunLabel.setAlignment(Qt.AlignCenter)
+
+            # Degree symbol for "description"
+            # font = QtGui.QFont()
+            # font.setFamily("Arial")
+            # font.setPointSize(16)
+            # self.deg3Label.setFont(font)
+            # self.deg3Label.setObjectName("deg3Label")
+            # self.deg3Label.setGeometry(QtCore.QRect(50, 125, 10, 10))
+            # self.deg3Label.setScaledContents(True)
+            # self.deg3Label.setStyleSheet("color: white;  background-color: black")
+
+            # Degree symbol for temperature
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(16)
+            self.deg4Label.setFont(font)
+            self.deg4Label.setObjectName("deg4Label")
+            self.deg4Label.setGeometry(QtCore.QRect(300, 80, 30, 35))
+            self.deg4Label.setScaledContents(True)
+            self.deg4Label.setStyleSheet("color: white;  background-color: black")
+
+            # ____________FFFFFORECAST_________
+            self.forecastLabel.setGeometry(QtCore.QRect(50, 60, 450, 50))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(40)
+            self.forecastLabel.setFont(font)
+            self.forecastLabel.setObjectName("forecastLabel")
+            self.forecastLabel.setStyleSheet("color: white;  background-color: black")
+
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.icon1Label.setFont(font)
+            self.icon1Label.setObjectName("icon1Label")
+            self.icon1Label.setGeometry(QtCore.QRect(70, 120, 30, 30))
+            self.icon1Label.setScaledContents(True)
+            self.icon1Label.setStyleSheet("color: white;  background-color: black")
+
+            self.icon2Label.setGeometry(QtCore.QRect(70, 160, 30, 30))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.icon2Label.setFont(font)
+            self.icon2Label.setObjectName("icon2Label")
+            self.icon2Label.setScaledContents(True)
+            self.icon2Label.setStyleSheet("color: white;  background-color: black")
+
+            self.icon3Label.setGeometry(QtCore.QRect(70, 200, 30, 30))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(13)
+            self.icon3Label.setFont(font)
+            self.icon3Label.setObjectName("icon3Label")
+            self.icon3Label.setScaledContents(True)
+            self.icon3Label.setStyleSheet("color: white;  background-color: black")
+
+            self.icon4Label.setGeometry(QtCore.QRect(1000, 280, 35, 35))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(13)
+            self.icon4Label.setFont(font)
+            self.icon4Label.setObjectName("icon4Label")
+            # self.icon4Label.setScaledContents(True)
+            # self.icon4Label.setStyleSheet("color: white;  background-color: black")
+
+            self.icon5Label.setGeometry(QtCore.QRect(1040, 320, 35, 35))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(13)
+            self.icon5Label.setFont(font)
+            self.icon5Label.setObjectName("icon5Label")
+            # self.icon5Label.setScaledContents(True)
+            # self.icon5Label.setStyleSheet("color: white;  background-color: black")
+
+            self.day1Label.setGeometry(QtCore.QRect(150, 120, 300, 30))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.day1Label.setFont(font)
+            self.day1Label.setObjectName("day1Label")
+            self.day1Label.setStyleSheet("color: white;  background-color: black")
+
+            self.day2Label.setGeometry(QtCore.QRect(150, 160, 300, 30))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.day2Label.setFont(font)
+            self.day2Label.setObjectName("day2Label")
+            self.day2Label.setStyleSheet("color: white;  background-color: black")
+
+            self.day3Label.setGeometry(QtCore.QRect(150, 200, 300, 30))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.day3Label.setFont(font)
+            self.day3Label.setObjectName("day3Label")
+            self.day3Label.setStyleSheet("color: white;  background-color: black")
+
+            self.day4Label.setGeometry(QtCore.QRect(1090, 290, 200, 20))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(13)
+            self.day4Label.setFont(font)
+            self.day4Label.setObjectName("day4Label")
+            # self.day4Label.setStyleSheet("color: white;  background-color: black")
+
+            self.day5Label.setGeometry(QtCore.QRect(1090, 330, 200, 20))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(13)
+            self.day5Label.setFont(font)
+            self.day5Label.setObjectName("day5Label")
+            # self.day5Label.setStyleSheet("color: white;  background-color: black")
+
+            # _______________________NEWSSSSSSSSSSSSS_______________
+            self.newsTLabel.setGeometry(QtCore.QRect(50, 50, 450, 50))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(40)
+            self.newsTLabel.setFont(font)
+            self.newsTLabel.setObjectName("newsTLabel")
+            self.newsTLabel.setStyleSheet("color: white;  background-color: black")
+
+            self.news1Label.setGeometry(QtCore.QRect(70, 110, 600, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.news1Label.setFont(font)
+            self.news1Label.setObjectName("news1Label")
+            self.news1Label.setStyleSheet("color: white;  background-color: black")
+
+            self.news2Label.setGeometry(QtCore.QRect(70, 140, 600, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.news2Label.setFont(font)
+            self.news2Label.setObjectName("news2Label")
+            self.news2Label.setStyleSheet("color: white;  background-color: black")
+
+            self.news3Label.setGeometry(QtCore.QRect(70, 170, 600, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.news3Label.setFont(font)
+            self.news3Label.setObjectName("news3Label")
+            self.news3Label.setStyleSheet("color: white;  background-color: black")
+
+            self.news4Label.setGeometry(QtCore.QRect(70, 200, 600, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.news4Label.setFont(font)
+            self.news4Label.setObjectName("news4Label")
+            self.news4Label.setStyleSheet("color: white;  background-color: black")
+
+            self.news5Label.setGeometry(QtCore.QRect(70, 230, 600, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.news5Label.setFont(font)
+            self.news5Label.setObjectName("news5Label")
+            self.news5Label.setStyleSheet("color: white;  background-color: black")
+
+            # ___________Twitter Trends_________
+            self.twitterLabel.setGeometry(QtCore.QRect(50, 60, 450, 50))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(40)
+            self.twitterLabel.setFont(font)
+            self.twitterLabel.setObjectName("twitterLabel")
+            self.twitterLabel.setStyleSheet("color: white;  background-color: black")
+
+            self.trend1Label.setGeometry(QtCore.QRect(70, 120, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.trend1Label.setFont(font)
+            self.trend1Label.setObjectName("trend1Label")
+            self.trend1Label.setStyleSheet("color: white;  background-color: black")
+
+            self.trend2Label.setGeometry(QtCore.QRect(70, 150, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.trend2Label.setFont(font)
+            self.trend2Label.setObjectName("trend2Label")
+            self.trend2Label.setStyleSheet("color: white;  background-color: black")
+
+            self.trend3Label.setGeometry(QtCore.QRect(70, 180, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.trend3Label.setFont(font)
+            self.trend3Label.setObjectName("trend3Label")
+            self.trend3Label.setStyleSheet("color: white;  background-color: black")
+
+            self.trend4Label.setGeometry(QtCore.QRect(70, 210, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.trend4Label.setFont(font)
+            self.trend4Label.setObjectName("trend4Label")
+            self.trend4Label.setStyleSheet("color: white;  background-color: black")
+
+            self.trend5Label.setGeometry(QtCore.QRect(70, 240, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.trend5Label.setFont(font)
+            self.trend5Label.setObjectName("trend5Label")
+            self.trend5Label.setStyleSheet("color: white;  background-color: black")
+
+            # ____________holidaysssssss______________
+            self.holidayTLabel.setGeometry(QtCore.QRect(50, 60, 480, 60))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(40)
+            self.holidayTLabel.setFont(font)
+            self.holidayTLabel.setObjectName("holidayTLabel")
+            self.holidayTLabel.setStyleSheet("color: white;  background-color: black")
+
+            self.holiday1Label.setGeometry(QtCore.QRect(70, 120, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.holiday1Label.setFont(font)
+            self.holiday1Label.setObjectName("holiday1Label")
+            self.holiday1Label.setStyleSheet("color: white;  background-color: black")
+
+            self.holiday2Label.setGeometry(QtCore.QRect(70, 150, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.holiday2Label.setFont(font)
+            self.holiday2Label.setObjectName("holiday2Label")
+            self.holiday2Label.setStyleSheet("color: white;  background-color: black")
+
+            self.holiday3Label.setGeometry(QtCore.QRect(70, 180, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.holiday3Label.setFont(font)
+            self.holiday3Label.setObjectName("holiday3Label")
+            self.holiday3Label.setStyleSheet("color: white;  background-color: black")
+
+            self.holiday4Label.setGeometry(QtCore.QRect(70, 210, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.holiday4Label.setFont(font)
+            self.holiday4Label.setObjectName("holiday4Label")
+            self.holiday4Label.setStyleSheet("color: white;  background-color: black")
+
+            self.holiday5Label.setGeometry(QtCore.QRect(70, 240, 300, 25))
+            font = QtGui.QFont()
+            font.setFamily("Arial")
+            font.setPointSize(20)
+            self.holiday5Label.setFont(font)
+            self.holiday5Label.setObjectName("holiday5Label")
+            self.holiday5Label.setStyleSheet("color: white;  background-color: black")
+
+        def retranslateUi(self, MainWindow):
+            _translate = QtCore.QCoreApplication.translate
+
+            MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+            self.crownLabel.setText(_translate("MainWindow", " The Crown Smart Mirror"))
+
+        def showTime(self):
+            _translate = QtCore.QCoreApplication.translate
+            currentTime = QTime.currentTime()
+            currentDate = QDate.currentDate()
+            time1 = currentTime.toString('hh:mm  ap')
+            sec1 = currentTime.toString('ss')
+            
+            self.rectangleLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/whiteline.PNG"))
+
+            self.timeLabel.setText(_translate("MainWindow", time1))
+            self.secLabel.setText(_translate("MainWindow", sec1))
+            date1 = currentDate.toString(Qt.DefaultLocaleLongDate)
+            self.dateLabel.setText(_translate("MainWindow", date1))
+
+            date = datetime.now().timetuple().tm_yday
+
+            holidays = {'1': "New Year's Day [1/1]"
+                , '20': "Martin Luther King Jr. Day [1/20]"
+                , '33': "Ground Hog Day [2/2]"
+                , '45': "Valentine's Day [2/14]"
+                , '49': "Washington's Birthday [2/18]"
+                , '68': "Daylight Savings Time Starts [3/8]"
+                , '77': "St.Patrick's Day [3/17]"
+                , '101': "Good Friday [4/10]"
+                , '103': "Easter Sunday [4/12]"
+                , '131': "Mother's Day [5/10]"
+                , '148': "Memorial Day [5/27]"
+                , '173': "Father's Day [6/21]"
+                , '186': "Independence Day [7/4]"
+                , '251': "Labor Day [9/7]"
+                , '288': "Columbus Day [10/12]"
+                , '305': "Halloween [10/31]"
+                , '308': "Election Day [11/3]"
+                , '316': "Veterans Day [11/11]"
+                , '332': "Black Friday [11/27]"
+                , '333': "Thanksgiving [11/28]"
+                , '360': "Christmas Day [12/25]"}
+
+            date1 = 1 - date
+            date2 = 20 - date
+            date3 = 33 - date
+            date4 = 45 - date
+            date5 = 49 - date
+            date6 = 68 - date
+            date7 = 77 - date
+            date8 = 101 - date
+            date9 = 103 - date
+            date10 = 131 - date
+            date11 = 148 - date
+            date12 = 173 - date
+            date13 = 186 - date
+            date14 = 251 - date
+            date15 = 288 - date
+            date16 = 305 - date
+            date17 = 308 - date
+            date18 = 316 - date
+            date19 = 332 - date
+            date20 = 333 - date
+            date21 = 360 - date
+
+            timeuntil = [date1, date2, date3, date4, date5, date6, date7, date8, date9, date10, date11, date12,
+                         date13, date14, date15, date16, date17, date18, date19, date20, date21]
+
+            timeuntil.sort()
+            abc = []
+            for i in timeuntil:
+                if i > 0:
+                    x = date + i
+                    y = str(x)
+                    z = holidays[y]
+
+                    for y in range(1):
+                        abc.append(z)
+
+            abc1 = abc[0]
+            abc2 = abc[1]
+            abc3 = abc[2]
+            abc4 = abc[3]
+            abc5 = abc[4]
+
+            self.holidayTLabel.setText(_translate("MainWindow", "Upcoming Holidays"))
+            self.holiday1Label.setText(_translate("MainWindow", abc1))
+            self.holiday2Label.setText(_translate("MainWindow", abc2))
+            self.holiday3Label.setText(_translate("MainWindow", abc3))
+            self.holiday4Label.setText(_translate("MainWindow", abc4))
+            self.holiday5Label.setText(_translate("MainWindow", abc5))
+
+        def showAPI(self):
+            _translate = QtCore.QCoreApplication.translate
+
+            from firebase import firebase
+            firebaseMode = firebase.FirebaseApplication("https://smartmirror1-b8e5a.firebaseio.com/", None)
+            firebaseInfo = firebase.FirebaseApplication("https://information-8b6ca.firebaseio.com/", None)
+
+            Location = firebaseMode.get("/Mirror1/Location", "")
+
+            if Location == "Boston":
+                iconDay1 = firebaseInfo.get('/Boston/iconDay1/', "")
+                minDay1 = firebaseInfo.get('/Boston/minDay1/', "")
+                maxDay1 = firebaseInfo.get('/Boston/maxDay1/', "")
+                iconDay2 = firebaseInfo.get('/Boston/iconDay2/', "")
+                minDay2 = firebaseInfo.get('/Boston/minDay2/', "")
+                maxDay2 = firebaseInfo.get('/Boston/maxDay2/', "")
+                iconDay3 = firebaseInfo.get('/Boston/iconDay3/', "")
+                minDay3 = firebaseInfo.get('/Boston/minDay3/', "")
+                maxDay3 = firebaseInfo.get('/Boston/maxDay3/', "")
+                iconDay5 = firebaseInfo.get('/Boston/iconDay5/', "")
+
+            elif Location == "Detroit":
+                iconDay1 = firebaseInfo.get('/Detroit/iconDay1/', "")
+                minDay1 = firebaseInfo.get('/Detroit/minDay1/', "")
+                maxDay1 = firebaseInfo.get('/Detroit/maxDay1/', "")
+                iconDay2 = firebaseInfo.get('/Detroit/iconDay2/', "")
+                minDay2 = firebaseInfo.get('/Detroit/minDay2/', "")
+                maxDay2 = firebaseInfo.get('/Detroit/maxDay2/', "")
+                iconDay3 = firebaseInfo.get('/Detroit/iconDay3/', "")
+                minDay3 = firebaseInfo.get('/Detroit/minDay3/', "")
+                maxDay3 = firebaseInfo.get('/Detroit/maxDay3/', "")
+                iconDay5 = firebaseInfo.get('/Detroit/iconDay5/', "")
+
+            elif Location == "Chicago":
+                iconDay1 = firebaseInfo.get('/Chicago/iconDay1/', "")
+                minDay1 = firebaseInfo.get('/Chicago/minDay1/', "")
+                maxDay1 = firebaseInfo.get('/Chicago/maxDay1/', "")
+                iconDay2 = firebaseInfo.get('/Chicago/iconDay2/', "")
+                minDay2 = firebaseInfo.get('/Chicago/minDay2/', "")
+                maxDay2 = firebaseInfo.get('/Chicago/maxDay2/', "")
+                iconDay3 = firebaseInfo.get('/Chicago/iconDay3/', "")
+                minDay3 = firebaseInfo.get('/Chicago/minDay3/', "")
+                maxDay3 = firebaseInfo.get('/Chicago/maxDay3/', "")
+                iconDay5 = firebaseInfo.get('/Chicago/iconDay5/', "")
+
+            elif Location == "NewYork":
+                iconDay1 = firebaseInfo.get('/NewYork/iconDay1/', "")
+                minDay1 = firebaseInfo.get('/NewYork/minDay1/', "")
+                maxDay1 = firebaseInfo.get('/NewYork/maxDay1/', "")
+                iconDay2 = firebaseInfo.get('/NewYork/iconDay2/', "")
+                minDay2 = firebaseInfo.get('/NewYork/minDay2/', "")
+                maxDay2 = firebaseInfo.get('/NewYork/maxDay2/', "")
+                iconDay3 = firebaseInfo.get('/NewYork/iconDay3/', "")
+                minDay3 = firebaseInfo.get('/NewYork/minDay3/', "")
+                maxDay3 = firebaseInfo.get('/NewYork/maxDay3/', "")
+                iconDay5 = firebaseInfo.get('/NewYork/iconDay5/', "")
+
+            elif Location == "Phoenix":
+                iconDay1 = firebaseInfo.get('/Phoenix/iconDay1/', "")
+                minDay1 = firebaseInfo.get('/Phoenix/minDay1/', "")
+                maxDay1 = firebaseInfo.get('/Phoenix/maxDay1/', "")
+                iconDay2 = firebaseInfo.get('/Phoenix/iconDay2/', "")
+                minDay2 = firebaseInfo.get('/Phoenix/minDay2/', "")
+                maxDay2 = firebaseInfo.get('/Phoenix/maxDay2/', "")
+                iconDay3 = firebaseInfo.get('/Phoenix/iconDay3/', "")
+                minDay3 = firebaseInfo.get('/Phoenix/minDay3/', "")
+                maxDay3 = firebaseInfo.get('/Phoenix/maxDay3/', "")
+                iconDay5 = firebaseInfo.get('/Phoenix/iconDay5/', "")
+
+            elif Location == "Houston":
+                iconDay1 = firebaseInfo.get('/Houston/iconDay1/', "")
+                minDay1 = firebaseInfo.get('/Houston/minDay1/', "")
+                maxDay1 = firebaseInfo.get('/Houston/maxDay1/', "")
+                iconDay2 = firebaseInfo.get('/Houston/iconDay2/', "")
+                minDay2 = firebaseInfo.get('/Houston/minDay2/', "")
+                maxDay2 = firebaseInfo.get('/Houston/maxDay2/', "")
+                iconDay3 = firebaseInfo.get('/Houston/iconDay3/', "")
+                minDay3 = firebaseInfo.get('/Houston/minDay3/', "")
+                maxDay3 = firebaseInfo.get('/Houston/maxDay3/', "")
+                iconDay5 = firebaseInfo.get('/Houston/iconDay5/', "")
+
+            if iconDay1 == 201 or iconDay1 == 202 or iconDay1 == 230 or iconDay1 == 231 or iconDay1 == 232 or iconDay1 == 233:
+                assets1 = "/home/pi/Desktop/Assets/WeatherIcons/Thunderstorm.PNG"
+                # thunderstorm
+            if iconDay1 == 301 or iconDay1 == 302:
+                assets1 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # drizzle
+            if iconDay1 == 500 or iconDay1 == 501 or iconDay1 == 502 or iconDay1 == 511 or iconDay1 == 520 or iconDay1 == 521 or iconDay1 == 522:
+                assets1 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # rain
+            if iconDay1 == 600 or iconDay1 == 601 or iconDay1 == 602 or iconDay1 == 610 or iconDay1 == 611 or iconDay1 == 612 or iconDay1 == 621 or iconDay1 == 622:
+                assets1 = "/home/pi/Desktop/Assets/WeatherIcons/Snow.PNG"
+                # snow
+            if iconDay1 == 700 or iconDay1 == 711 or iconDay1 == 721 or iconDay1 == 731 or iconDay1 == 741 or iconDay1 == 751:
+                assets1 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # fog
+            if iconDay1 == 800:
+                assets1 = "/home/pi/Desktop/Assets/WeatherIcons/Clear.PNG"
+                # clear skies
+            if iconDay1 == 801 or iconDay1 == 802 or iconDay1 == 803 or iconDay1 == 804 or iconDay1 == 900:
+                assets1 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # cloudy
+            else:
+                print("Weather1 code not recognized")
+                print(iconDay1)
+
+            if iconDay2 == 201 or iconDay2 == 202 or iconDay2 == 230 or iconDay2 == 231 or iconDay2 == 232 or iconDay2 == 233:
+                assets2 = "/home/pi/Desktop/Assets/WeatherIcons/Thunderstorm.PNG"
+                # thunderstorm
+            if iconDay2 == 301 or iconDay2 == 302:
+                assets2 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # drizzle
+            if iconDay2 == 500 or iconDay2 == 501 or iconDay2 == 502 or iconDay2 == 511 or iconDay2 == 520 or iconDay2 == 521 or iconDay2 == 522:
+                assets2 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # rain
+            if iconDay2 == 600 or iconDay2 == 601 or iconDay2 == 602 or iconDay2 == 610 or iconDay2 == 611 or iconDay2 == 612 or iconDay2 == 621 or iconDay2 == 622:
+                assets2 = "/home/pi/Desktop/Assets/WeatherIcons/Snow.PNG"
+                # snow
+            if iconDay2 == 700 or iconDay2 == 711 or iconDay2 == 721 or iconDay2 == 731 or iconDay2 == 741 or iconDay2 == 751:
+                assets2 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # fog
+            if iconDay2 == 800:
+                assets2 = "/home/pi/Desktop/Assets/WeatherIcons/Clear.PNG"
+                # clear skies
+            if iconDay2 == 801 or iconDay2 == 802 or iconDay2 == 803 or iconDay2 == 804 or iconDay2 == 900:
+                assets2 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # cloudy
+            else:
+                print("Weather2 code not recognized")
+                print(iconDay2)
+
+            if iconDay3 == 201 or iconDay3 == 202 or iconDay3 == 230 or iconDay3 == 231 or iconDay3 == 232 or iconDay3 == 233:
+                assets3 = "/home/pi/Desktop/Assets/WeatherIcons/Thunderstorm.PNG"
+                # thunderstorm
+            if iconDay3 == 301 or iconDay3 == 302:
+                assets3 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # drizzle
+            if iconDay3 == 500 or iconDay3 == 501 or iconDay3 == 502 or iconDay3 == 511 or iconDay3 == 520 or iconDay3 == 521 or iconDay3 == 522:
+                assets3 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # rain
+            if iconDay3 == 600 or iconDay3 == 601 or iconDay3 == 602 or iconDay3 == 610 or iconDay3 == 611 or iconDay3 == 612 or iconDay3 == 621 or iconDay3 == 622:
+                assets3 = "/home/pi/Desktop/Assets/WeatherIcons/Snow.PNG"
+                # snow
+            if iconDay3 == 700 or iconDay3 == 711 or iconDay3 == 721 or iconDay3 == 731 or iconDay3 == 741 or iconDay3 == 751:
+                assets3 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # fog
+            if iconDay3 == 800:
+                assets3 = "/home/pi/Desktop/Assets/WeatherIcons/Clear.PNG"
+                # clear skies
+            if iconDay3 == 801 or iconDay3 == 802 or iconDay3 == 803 or iconDay3 == 804 or iconDay3 == 900:
+                assets3 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # cloudy
+            else:
+                print("Weather3 code not recognized")
+                print(iconDay3)
+
+            if iconDay5 == 201 or iconDay5 == 202 or iconDay5 == 230 or iconDay5 == 231 or iconDay5 == 232 or iconDay5 == 233:
+                assets5 = "/home/pi/Desktop/Assets/WeatherIcons/Thunderstorm.PNG"
+                # thunderstorm
+            if iconDay5 == 301 or iconDay5 == 302:
+                assets5 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # drizzle
+            if iconDay5 == 500 or iconDay5 == 501 or iconDay5 == 502 or iconDay5 == 511 or iconDay5 == 520 or iconDay5 == 521 or iconDay5 == 522:
+                assets5 = "/home/pi/Desktop/Assets/WeatherIcons/Rain.PNG"
+                # rain
+            if iconDay5 == 600 or iconDay5 == 601 or iconDay5 == 602 or iconDay5 == 610 or iconDay5 == 611 or iconDay5 == 612 or iconDay5 == 621 or iconDay5 == 622:
+                assets5 = "/home/pi/Desktop/Assets/WeatherIcons/Snow.PNG"
+                # snow
+            if iconDay5 == 700 or iconDay5 == 711 or iconDay5 == 721 or iconDay5 == 731 or iconDay5 == 741 or iconDay5 == 751:
+                assets5 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # fog
+            if iconDay5 == 800:
+                assets5 = "/home/pi/Desktop/Assets/WeatherIcons/Clear.PNG"
+                # clear skies
+            if iconDay5 == 801 or iconDay5 == 802 or iconDay5 == 803 or iconDay5 == 804 or iconDay5 == 900:
+                assets5 = "/home/pi/Desktop/Assets/WeatherIcons/Clouds.PNG"
+                # cloudy
+            else:
+                print("Weather5 code not recognized")
+                print(iconDay5)
+
+            self.forecastLabel.setText(_translate("MainWindow", "Forecast "))
+            self.weatherLabel.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/Cloud.PNG"))
+
+            self.icon1Label.setPixmap(QtGui.QPixmap(assets1))
+            self.icon2Label.setPixmap(QtGui.QPixmap(assets2))
+            self.icon3Label.setPixmap(QtGui.QPixmap(assets3))
+            self.weatherLabel.setPixmap(QtGui.QPixmap(assets5))
+            # self.icon4Label.setPixmap(QtGui.QPixmap(assets4))
+            # self.icon5Label.setPixmap(QtGui.QPixmap(assets5))
+
+            self.day1Label.setText(_translate("MainWindow", "Wednesday [" + minDay1 + "/" + maxDay1 + "] "))
+            self.day2Label.setText(_translate("MainWindow", "Thursday [" + minDay2 + "/" + maxDay2 + "] "))
+            self.day3Label.setText(_translate("MainWindow", "Friday [" + minDay3 + "/" + maxDay3 + "] "))
+            # self.day4Label.setText(_translate("MainWindow", "Saturday [" + minDay4 + "/" + maxDay4+ "] "))
+            # self.day5Label.setText(_translate("MainWindow", "Sunday [" + minDay5 + "/" + maxDay5+ "] "))
+
+            temp = firebaseInfo.get('/Boston/temp/', "")
+            desData = firebaseInfo.get('/Boston/description/', "")
+
+            self.tempLabel.setText(_translate("MainWindow", temp + " F"))
+            # self.deg1Label.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/DegreeMega3"))
+            self.desLabel.setText(_translate("MainWindow", str(desData)))
+            # self.deg2Label.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/DegreeMega3"))
+            # self.sunLabel.setText(_translate("MainWindow", "Sunset: " + hrSt2 + ":" + minSt2 + " " + snap))
+            self.sunLabel.setText(_translate("MainWindow", " "))
+            # self.deg3Label.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/DegreeMega3"))
+            self.deg4Label.setPixmap(QtGui.QPixmap("/home/pi/Desktop/Assets/DegreeMega3.PNG"))
+
+            headline1 = firebaseInfo.get('/News/headline1/', "")
+            headline2 = firebaseInfo.get('/News/headline2/', "")
+            headline3 = firebaseInfo.get('/News/headline3/', "")
+            headline4 = firebaseInfo.get('/News/headline4/', "")
+            headline5 = firebaseInfo.get('/News/headline5/', "")
+            headline6 = firebaseInfo.get('/News/headline6/', "")
+            headline7 = firebaseInfo.get('/News/headline7/', "")
+            headline8 = firebaseInfo.get('/News/headline8/', "")
+            headline9 = firebaseInfo.get('/News/headline9/', "")
+            headline10 = firebaseInfo.get('/News/headline10/', "")
+
+            self.newsTLabel.setText(_translate("MainWindow", "Today's Headlines"))
+
+            self.news1Label.setText(_translate("MainWindow", headline6))
+            self.news2Label.setText(_translate("MainWindow", headline7))
+            self.news3Label.setText(_translate("MainWindow", headline8))
+            self.news4Label.setText(_translate("MainWindow", headline9))
+            self.news5Label.setText(_translate("MainWindow", headline10))
+            self.news1Label.setText(_translate("MainWindow", headline1))
+            self.news2Label.setText(_translate("MainWindow", headline2))
+            self.news3Label.setText(_translate("MainWindow", headline3))
+            self.news4Label.setText(_translate("MainWindow", headline4))
+            self.news5Label.setText(_translate("MainWindow", headline5))
+
+        def showTwitter(self):
+            _translate = QtCore.QCoreApplication.translate
+
+            from firebase import firebase
+            firebaseInfo = firebase.FirebaseApplication("https://information-8b6ca.firebaseio.com/")
+            trendName1 = firebaseInfo.get('/Twitter/trendName1/', "")
+            trendName2 = firebaseInfo.get('/Twitter/trendName2/', "")
+            trendName3 = firebaseInfo.get('/Twitter/trendName3/', "")
+            trendName4 = firebaseInfo.get('/Twitter/trendName4/', "")
+            trendName5 = firebaseInfo.get('/Twitter/trendName5/', "")
+
+            self.trend1Label.setText(_translate("MainWindow", trendName1))
+            self.trend2Label.setText(_translate("MainWindow", trendName2))
+            self.trend3Label.setText(_translate("MainWindow", trendName3))
+            self.trend4Label.setText(_translate("MainWindow", trendName4))
+            self.trend5Label.setText(_translate("MainWindow", trendName5))
+            self.twitterLabel.setText(_translate("MainWindow", "Twitter Trends"))
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    MainWindow = QtWidgets.QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(MainWindow)
+    MainWindow.show()
+    sys.exit(app.exec_())
