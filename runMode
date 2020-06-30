@@ -1,0 +1,42 @@
+#import MultiWidgetDarkGallery
+import sys
+import requests
+import math
+import subprocess
+import time
+import pyrebase
+
+config = {
+    "apiKey": "AIzaSyAWz06lKRUw6wBXnnhmC5_uHMHMEw-tWPI",
+    "authDomain": "smartmirror1-b8e5a.firebaseapp.com",
+    "databaseURL": "https://smartmirror1-b8e5a.firebaseio.com",
+    "storageBucket": "smartmirror1-b8e5a.appspot.com"
+}
+
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
+
+#hehe = db.child("Mirror1").get()
+#print(hehe.val()) # {"Morty": {"name": "Mortimer 'Morty' Smith"}, "Rick": {"name": "Rick Sanchez"}}
+
+
+def stream_handler(message):
+    print(message["data"])  # {'title': 'Pyrebase', "body": "etc..."}
+    #exec(open("./official1.py").read(), globals())
+    #execfile("official.py")
+    #runpy.run_path(path_name='official1.py')
+    #os.system("python /home/pi/Desktop/official1.py")
+    #os.popen ("python /home/pi/Desktop/official1.py").read()
+    subprocess.Popen([sys.executable,"main.py"]) 
+my_stream = db.child("Mirror1").child("Mode").stream(stream_handler)
+
+
+def painting_handler(message):
+    print(message["data"])  # {'title': 'Pyrebase', "body": "etc..."}
+    #exec(open("./official1.py").read(), globals())
+    #execfile("official.py")
+    #runpy.run_path(path_name='official1.py')
+    #os.system("python /home/pi/Desktop/official1.py")
+    #os.popen ("python /home/pi/Desktop/official1.py").read()
+    subprocess.Popen([sys.executable,"main.py"])
+my_stream = db.child("Mirror1").child("paintingName").stream(painting_handler)
