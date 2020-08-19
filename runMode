@@ -1,4 +1,3 @@
-#import MultiWidgetDarkGallery
 import sys
 import requests
 import math
@@ -7,10 +6,10 @@ import time
 import pyrebase
 
 config = {
-    "apiKey": "AIzaSyAWz06lKRUw6wBXnnhmC5_uHMHMEw-tWPI",
-    "authDomain": "smartmirror1-b8e5a.firebaseapp.com",
-    "databaseURL": "https://smartmirror1-b8e5a.firebaseio.com",
-    "storageBucket": "smartmirror1-b8e5a.appspot.com"
+    "apiKey": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "storageBucket": ""
 }
 
 firebase = pyrebase.initialize_app(config)
