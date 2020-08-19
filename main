@@ -16,8 +16,8 @@ import random
 
 class Ui_MainWindow(object):
     from firebase import firebase
-    firebaseMode = firebase.FirebaseApplication("https://smartmirror1-b8e5a.firebaseio.com/", None)
-    firebaseInfo = firebase.FirebaseApplication("https://information-8b6ca.firebaseio.com/")
+    firebaseMode = firebase.FirebaseApplication("", None)
+    firebaseInfo = firebase.FirebaseApplication("")
 
     mode = firebaseMode.get("/Mirror1/Mode", "")
     print(mode)
@@ -934,8 +934,8 @@ class Ui_MainWindow(object):
             _translate = QtCore.QCoreApplication.translate
 
             from firebase import firebase
-            firebaseMode = firebase.FirebaseApplication("https://smartmirror1-b8e5a.firebaseio.com/", None)
-            firebaseInfo = firebase.FirebaseApplication("https://information-8b6ca.firebaseio.com/", None)
+            firebaseMode = firebase.FirebaseApplication("", None)
+            firebaseInfo = firebase.FirebaseApplication("", None)
 
             Location = firebaseMode.get("/Mirror1/Location", "")
 
@@ -1167,7 +1167,7 @@ class Ui_MainWindow(object):
             _translate = QtCore.QCoreApplication.translate
 
             from firebase import firebase
-            firebaseInfo = firebase.FirebaseApplication("https://information-8b6ca.firebaseio.com/")
+            firebaseInfo = firebase.FirebaseApplication("")
             trendName1 = firebaseInfo.get('/Twitter/trendName1/', "")
             trendName2 = firebaseInfo.get('/Twitter/trendName2/', "")
             trendName3 = firebaseInfo.get('/Twitter/trendName3/', "")
