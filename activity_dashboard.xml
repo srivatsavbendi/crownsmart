@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#D8870E"
+    tools:context=".dashboardActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/homeDivide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="0.1"
+            android:background="@drawable/whenpressedgray"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/logoText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1.3"
+                android:gravity="bottom"
+                android:paddingBottom="10dp"
+                android:text="CROWN"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/smartmirrorText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="bottom"
+                android:paddingBottom="15dp"
+                android:text="SMART MIRRORS"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dashboardDivide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="10dp"
+            android:layout_weight="1.5"
+            android:background="#212121"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/dashboardDividetext"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:text="Dashboard"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/dashboardDividepicture"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/defaultscreen" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/pictureDivide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1.15"
+            android:background="#212121"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/slideshowImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/dashboarddraw" />
+
+            <TextView
+                android:id="@+id/slideshowText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:text="DEFAULT"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/editDivide"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0.8"
+            android:background="#212121"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:id="@+id/edits"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/add"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="#FFFFFF"
+                    android:textSize="50sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/painting2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="50sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="#FFFFFF"
+                    android:textSize="50sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/editsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:fontFamily="monospace"
+                android:gravity="center"
+                android:text="CUSTOM"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
