@@ -1,6 +1,12 @@
-# crownsmart
-smart mirrors 
+# Smart Mirror
 
-main.py is the file with all of the python code
+Smart Mirror is a mirror with an LED display that provides real-time updates on news, weather, sports, notes, and calendar events. It's powered by a Raspberry Pi and utilizes various APIs.
 
-runMode.py is the file that is run. It checks if the user changed the mode of their mirror on the mobile application. If it has been changed, this file restarts main.py to display the respective mode
+### Key Skills and Tools
+* Python AutoGUI
+* Raspberry Pi (Hardware)
+* Tweepy (Twitter API)
+* NewsAPI
+* Spotify API
+* Weather API
+* Firebase (Realtime Database)
